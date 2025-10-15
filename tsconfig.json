@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    /* Dossiers de compilation */
+    "rootDir": "src",
+    "outDir": "dist",
+
+    /* Cible et module */
+    "target": "ES2020",
+    "module": "commonjs",
+
+    /* Options de typage strict */
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Résolution et détection des modules */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    /* Outils utiles */
+    "sourceMap": true,
+    "declaration": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    /* (Optionnel) JSX — seulement utile si tu fais du React */
+    // "jsx": "react-jsx"
+
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
