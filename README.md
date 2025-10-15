@@ -40,7 +40,6 @@ Elle permet également aux utilisateurs et aux organisateurs de **créer, gérer
 
 ## Structure du projet
 
-```
 
 guestpass-api/
 │
