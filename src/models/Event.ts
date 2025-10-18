@@ -21,7 +21,7 @@ const EventSchema = new Schema<IEvent>(
     description: { type: String },
     organizer: { type: Schema.Types.ObjectId, ref: "User", required: true },
     organization: { type: Schema.Types.ObjectId, ref: "Organization" },
-    venue: { type: Schema.Types.ObjectId, ref: "Venue" },
+    venue: { type: Schema.Types.ObjectId, ref: "Venue", required: true },
     category: { type: String },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
