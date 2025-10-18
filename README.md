@@ -227,7 +227,7 @@ Le script `seed.ts` crée :
 **Noé Kenfack**
 Développeur full-stack / UX Designer
 📍 Basé à Montréal, Canada
-🌐 [www.ultradominons.com/ds](https://www.ultradominons.com/ds)
+🌐 [www.noekenfack.vercel.app](https://noekenfack.vercel.app/)
 
 ---
 
