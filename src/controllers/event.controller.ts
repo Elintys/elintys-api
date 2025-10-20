@@ -30,8 +30,8 @@
     try {
         const event = await Event.findById(req.params.id)
         .populate("organizer", "firstName lastName email")
-        .populate("organization", "name")
-        .populate("venue", "name address")
+        .populate("organization")
+        .populate("venue")
         .populate("tickets")
         .populate("staff", "firstName lastName");
 

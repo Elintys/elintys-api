@@ -1,0 +1,43 @@
+Organization:
+  type: object
+  required:
+    - name
+    - owner
+  properties:
+    _id:
+      type: string
+      description: ID unique de l'organisation
+      example: "670b1f12abcde9012f5d9876"
+    name:
+      type: string
+      description: Nom de l'organisation
+      example: "Nova Events"
+    logoUrl:
+      type: string
+      description: URL du logo de l'organisation
+      example: "https://cdn.elyntis.com/logos/nova-events.png"
+    description:
+      type: string
+      example: "Agence de planification d'événements professionnels"
+    owner:
+      type: string
+      description: ID du propriétaire (utilisateur)
+      example: "66ff14ed98a9a8e21300afc4"
+    members:
+      type: array
+      items:
+        type: string
+      example: ["671a2c1d0000000000000123", "671a2c1d0000000000000456"]
+    events:
+      type: array
+      items:
+        type: string
+      example: ["671a2c1d0000000000000789"]
+    createdAt:
+      type: string
+      format: date-time
+      example: "2024-06-01T12:00:00.000Z"
+    updatedAt:
+      type: string
+      format: date-time
+      example: "2024-06-10T15:30:00.000Z"

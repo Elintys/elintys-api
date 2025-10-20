@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: Elyntis API
+  version: 1.0.0
+  description: >
+    Documentation complète de l'API Elyntis pour la gestion des événements,
+    des utilisateurs, des organisations, des tickets, des lieux, des notifications et des invitations.
+
+servers:
+  - url: http://localhost:3000
+    description: Serveur local Elyntis API
+
+components:
+  schemas:
+    User:
+      $ref: "./user.schema.yaml#/User"
+    Event:
+      $ref: "./event.schema.yaml#/Event"
+    Organization:
+      $ref: "./organization.schema.yaml#/Organization"
+    Ticket:
+      $ref: "./ticket.schema.yaml#/Ticket"
+    Venue:
+      $ref: "./venue.schema.yaml#/Venue"
+    Notification:
+      $ref: "./notification.schema.yaml#/Notification"
+    Invitation:
+      $ref: "./invitation.schema.yaml#/Invitation"
+
+tags:
+  - name: Users
+    description: Gestion des utilisateurs
+  - name: Events
+    description: Gestion des événements
+  - name: Organizations
+    description: Gestion des organisations
+  - name: Tickets
+    description: Gestion des tickets
+  - name: Venues
+    description: Gestion des lieux
+  - name: Notifications
+    description: Gestion des notifications
+  - name: Invitations
+    description: Gestion des invitations
+
+paths:
+  $ref: "./event.paths.yaml"

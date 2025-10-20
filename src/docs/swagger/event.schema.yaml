@@ -1,0 +1,55 @@
+Event:
+  type: object
+  required:
+    - title
+    - organizer
+    - startDate
+    - endDate
+  properties:
+    title:
+      type: string
+      example: "Gala des Entrepreneurs"
+    organizer:
+      type: string
+      example: "66ff14ed98a9a8e21300afc4"
+    category:
+      type: string
+      example: "Business"
+    startDate:
+      type: string
+      format: date-time
+      example: "2025-03-15T18:00:00.000Z"
+    endDate:
+      type: string
+      format: date-time
+      example: "2025-03-15T23:00:00.000Z"
+    isPublic:
+      type: boolean
+      example: true
+    venue:
+      type: string
+      example: "670b1f12abcde9012f5d5678"
+    organization:
+      type: string
+      example: "671a2c1d0000000000000123"
+    description:
+      type: string
+      example: "Une soirée prestigieuse réunissant les entrepreneurs de la région."
+    tickets:
+      type: array
+      items:
+        type: string
+      example: ["680c2d34def4567890ab1234", "680c2d34def4567890ab5678"]
+    staff:
+      type: array
+      items:
+        type: string
+      example: ["670b1f12abcde9012f5d1234", "670b1f12abcde9012f5d5678"]
+    createdAt:
+      type: string
+      format: date-time
+      example: "2024-06-01T12:00:00.000Z"
+    updatedAt:
+      type: string
+      format: date-time
+      example: "2024-06-10T15:30:00.000Z"

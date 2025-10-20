@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Elyntis / GuestPass API Documentation",
+    "version": "1.0.0",
+    "description": "Documentation complète de l'API Elyntis / GuestPass couvrant les entités : Users, Events, Venues, Organizations, Invitations, Tickets et Notifications."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Serveur local Elyntis"
+    }
+  ],
+  "tags": [
+    { "name": "Users", "description": "Gestion des utilisateurs" },
+    { "name": "Events", "description": "Gestion des événements" },
+    { "name": "Venues", "description": "Gestion des lieux d’événements" },
+    { "name": "Organizations", "description": "Gestion des organisations" },
+    { "name": "Invitations", "description": "Gestion des invitations aux événements" },
+    { "name": "Tickets", "description": "Gestion des billets d’accès" },
+    { "name": "Notifications", "description": "Gestion des notifications utilisateurs" }
+  ],
+  "paths": {
+    "/api/users": {
+      "get": { "summary": "Liste tous les utilisateurs", "tags": ["Users"], "responses": { "200": { "description": "Liste complète des utilisateurs" } } },
+      "post": { "summary": "Crée un nouvel utilisateur", "tags": ["Users"], "responses": { "201": { "description": "Utilisateur créé avec succès" } } }
+    },
+    "/api/users/{id}": {
+      "get": { "summary": "Récupère un utilisateur par ID", "tags": ["Users"] },
+      "put": { "summary": "Met à jour un utilisateur existant", "tags": ["Users"] },
+      "delete": { "summary": "Supprime un utilisateur", "tags": ["Users"] }
+    },
+    "/api/events": {
+      "get": { "summary": "Liste tous les événements", "tags": ["Events"] },
+      "post": { "summary": "Crée un nouvel événement", "tags": ["Events"] }
+    },
+    "/api/events/{id}": {
+      "get": { "summary": "Récupère un événement par ID", "tags": ["Events"] },
+      "put": { "summary": "Met à jour un événement", "tags": ["Events"] },
+      "delete": { "summary": "Supprime un événement", "tags": ["Events"] }
+    },
+    "/api/venues": {
+      "get": { "summary": "Liste tous les lieux", "tags": ["Venues"] },
+      "post": { "summary": "Crée un nouveau lieu", "tags": ["Venues"] }
+    },
+    "/api/venues/{id}": {
+      "get": { "summary": "Récupère un lieu par ID", "tags": ["Venues"] },
+      "put": { "summary": "Met à jour un lieu", "tags": ["Venues"] },
+      "delete": { "summary": "Supprime un lieu", "tags": ["Venues"] }
+    },
+    "/api/organizations": {
+      "get": { "summary": "Liste toutes les organisations", "tags": ["Organizations"] },
+      "post": { "summary": "Crée une organisation", "tags": ["Organizations"] }
+    },
+    "/api/organizations/{id}": {
+      "get": { "summary": "Détails d’une organisation", "tags": ["Organizations"] },
+      "put": { "summary": "Met à jour une organisation", "tags": ["Organizations"] },
+      "delete": { "summary": "Supprime une organisation", "tags": ["Organizations"] }
+    },
+    "/api/invitations": {
+      "get": { "summary": "Liste toutes les invitations", "tags": ["Invitations"] },
+      "post": { "summary": "Crée une invitation", "tags": ["Invitations"] }
+    },
+    "/api/invitations/event/{eventId}": {
+      "get": { "summary": "Récupère les invitations d’un événement", "tags": ["Invitations"] }
+    },
+    "/api/invitations/{id}": {
+      "patch": { "summary": "Met à jour le statut d’une invitation", "tags": ["Invitations"] },
+      "delete": { "summary": "Supprime une invitation", "tags": ["Invitations"] }
+    },
+    "/api/tickets": {
+      "get": { "summary": "Liste tous les tickets", "tags": ["Tickets"] },
+      "post": { "summary": "Crée un ticket", "tags": ["Tickets"] }
+    },
+    "/api/tickets/{id}": {
+      "get": { "summary": "Récupère un ticket par ID", "tags": ["Tickets"] },
+      "put": { "summary": "Met à jour un ticket", "tags": ["Tickets"] },
+      "delete": { "summary": "Supprime un ticket", "tags": ["Tickets"] }
+    },
+    "/api/notifications": {
+      "get": { "summary": "Liste toutes les notifications", "tags": ["Notifications"] },
+      "post": { "summary": "Crée une notification", "tags": ["Notifications"] }
+    },
+    "/api/notifications/user/{userId}": {
+      "get": { "summary": "Récupère les notifications d’un utilisateur", "tags": ["Notifications"] }
+    },
+    "/api/notifications/{id}/read": {
+      "patch": { "summary": "Marque une notification comme lue", "tags": ["Notifications"] }
+    },
+    "/api/notifications/{id}": {
+      "delete": { "summary": "Supprime une notification", "tags": ["Notifications"] }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+Invitation:
+  type: object
+  required:
+    - event
+    - sender
+    - recipientEmail
+  properties:
+    _id:
+      type: string
+      description: ID unique de l'invitation
+      example: "671a2c1d0000000000000222"
+    event:
+      type: string
+      description: ID de l'événement concerné
+      example: "671a2c1d0000000000000111"
+    sender:
+      type: string
+      description: ID de l'utilisateur organisateur qui a envoyé l'invitation
+      example: "66ff14ed98a9a8e21300afc4"
+    recipientEmail:
+      type: string
+      description: Email du destinataire invité
+      example: "invite@example.com"
+    status:
+      type: string
+      enum: [pending, accepted, declined]
+      description: État actuel de l'invitation
+      example: "pending"
+    sentAt:
+      type: string
+      format: date-time
+      example: "2025-03-01T12:00:00.000Z"
+    respondedAt:
+      type: string
+      format: date-time
+      nullable: true
+      example: null
+    createdAt:
+      type: string
+      format: date-time
+      example: "2025-03-01T12:00:00.000Z"
+    updatedAt:
+      type: string
+      format: date-time
+      example: "2025-03-05T15:30:00.000Z"

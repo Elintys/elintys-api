@@ -1,0 +1,41 @@
+Venue:
+  type: object
+  required:
+    - name
+    - address
+    - capacity
+  properties:
+    _id:
+      type: string
+      description: ID unique du lieu
+      example: "671a2c1d0000000000000777"
+    name:
+      type: string
+      description: Nom du lieu ou salle
+      example: "Espace Horizon"
+    address:
+      type: string
+      description: Adresse complète du lieu
+      example: "125 Rue Sainte-Catherine, Montréal, QC"
+    capacity:
+      type: integer
+      description: Capacité maximale d'accueil
+      example: 300
+    type:
+      type: string
+      description: Type du lieu
+      example: "Salle de conférence"
+    description:
+      type: string
+      example: "Espace moderne idéal pour des événements professionnels"
+    imageUrl:
+      type: string
+      example: "https://cdn.elyntis.com/venues/horizon.jpg"
+    createdAt:
+      type: string
+      format: date-time
+      example: "2024-06-05T09:00:00.000Z"
+    updatedAt:
+      type: string
+      format: date-time     
+      example: "2024-06-10T15:30:00.000Z"

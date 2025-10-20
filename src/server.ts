@@ -2,6 +2,7 @@ import app from './app';
 import { connectDB } from './config/db.config';
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import YAML from "yamljs";
 
 import path from "path";
 
@@ -23,6 +24,16 @@ const swaggerOptions = {
   apis: [path.join(__dirname, "./routes/*.ts")], // <--- où Swagger cherche les annotations
 };
 
+// Génération de la documentation Swagger
+// const swaggerPath = path.join(__dirname, "docs", "swagger", "index.yaml");
+// const swaggerDocument = YAML.load(swaggerPath);
+
+// app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// console.log(` Documentation disponible sur : http://localhost:${PORT}/api/docs`);
+
+
+
 
 // Génération de la documentation
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
@@ -30,7 +41,7 @@ app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
 
-console.log(" Documentation disponible sur : http://localhost:5000/api/docs");
+console.log(" Documentation disponible sur : http://localhost:3000/api/docs");
 
 // Démarrer le serveur après connexion à la DB
 connectDB().then(() => {

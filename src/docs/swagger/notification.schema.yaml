@@ -1,0 +1,39 @@
+Notification:
+  type: object
+  required:
+    - user
+    - title
+    - message
+  properties:
+    _id:
+      type: string
+      description: ID unique de la notification
+      example: "671a2c1d0000000000000999"
+    user:
+      type: string
+      description: ID de l'utilisateur destinataire
+      example: "66ff14ed98a9a8e21300afc4"
+    title:
+      type: string
+      description: Titre de la notification
+      example: "Nouvel événement disponible"
+    message:
+      type: string
+      description: Contenu principal du message
+      example: "Vous êtes invité à participer au Gala des Entrepreneurs 2025"
+    type:
+      type: string
+      description: Type de notification
+      example: "event"
+    read:
+      type: boolean
+      description: Indique si la notification a été lue
+      example: false
+    createdAt:
+      type: string
+      format: date-time
+      example: "2024-06-15T10:00:00.000Z"
+    updatedAt:
+      type: string
+      format: date-time
+      example: "2024-06-15T12:30:00.000Z"

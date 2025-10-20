@@ -1,0 +1,84 @@
+/api/events:
+  get:
+    summary: Liste tous les événements
+    tags: [Events]
+    description: Récupère la liste complète des événements disponibles dans le système Elyntis.
+    responses:
+      '200':
+        description: Liste complète des événements
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "./event.schema.yaml#/Event"
+
+  post:
+    summary: Crée un nouvel événement
+    tags: [Events]
+    description: Permet à un organisateur de créer un nouvel événement.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "./event.schema.yaml#/Event"
+    responses:
+      '201':
+        description: Événement créé avec succès
+      '400':
+        description: Données invalides
+
+/api/events/{id}:
+  get:
+    summary: Récupère un événement par ID
+    tags: [Events]
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Détails de l’événement
+        content:
+          application/json:
+            schema:
+              $ref: "./event.schema.yaml#/Event"
+      '404':
+        description: Événement non trouvé
+
+  put:
+    summary: Met à jour un événement
+    tags: [Events]
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "./event.schema.yaml#/Event"
+    responses:
+      '200':
+        description: Événement mis à jour avec succès
+
+  delete:
+    summary: Supprime un événement
+    tags: [Events]
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Événement supprimé avec succès
+      '404':
+        description: Événement non trouvé

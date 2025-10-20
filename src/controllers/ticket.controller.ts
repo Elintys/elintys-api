@@ -48,7 +48,7 @@ export const getAllTickets = async (req: Request, res: Response): Promise<void> 
   try {
     const tickets = await Ticket.find()
       .populate("event", "title date location")
-      .populate("owner", "firstName lastName email");
+      // .populate("owner", "firstName lastName email");
     res.status(200).json(tickets);
   } catch (error: any) {
     res.status(500).json({ message: "Erreur lors de la récupération des tickets", error: error.message });

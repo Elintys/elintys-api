@@ -1,0 +1,48 @@
+Ticket:
+  type: object
+  required:
+    - event
+    - owner
+    - type
+    - price
+  properties:
+    _id:
+      type: string
+      description: ID unique du ticket
+      example: "671a2c1d0000000000000456"
+    event:
+      type: string
+      description: ID de l'événement concerné
+      example: "671a2c1d0000000000000111"
+    owner:
+      type: string
+      description: ID de l'utilisateur détenteur du ticket
+      example: "66ff14ed98a9a8e21300afc4"
+    type:
+      type: string
+      enum: [standard, vip, premium]
+      example: "vip"
+    price:
+      type: number
+      format: float
+      example: 75.00
+    qrCode:
+      type: string
+      description: Code QR unique pour validation
+      example: "QR_ABC123XYZ"
+    status:
+      type: string
+      enum: [active, used, cancelled]
+      example: "active"
+    purchaseDate:
+      type: string
+      format: date-time
+      example: "2024-06-15T14:30:00.000Z"
+    createdAt:
+      type: string
+      format: date-time
+      example: "2024-06-15T14:30:00.000Z"
+    updatedAt:
+      type: string
+      format: date-time
+      example: "2024-06-20T10:15:00.000Z"     

@@ -1,0 +1,46 @@
+User:
+  type: object
+  required:
+    - firstName
+    - lastName
+    - email
+    - password
+  properties:
+    _id:
+      type: string
+      description: ID unique de l'utilisateur
+      example: "670b1f12abcde9012f5d1234"
+    firstName:
+      type: string
+      example: "Klan"
+    lastName:
+      type: string
+      example: "Saah"
+    email:
+      type: string
+      example: "klan@elyntis.com"
+    role:
+      type: string
+      enum: [user, organizer, staff, admin]
+      example: "organizer"
+    avatarUrl:
+      type: string
+      example: "https://randomuser.me/api/portraits/men/21.jpg"
+    organizations:
+      type: array
+      items:
+        type: string
+      example: ["671a2c1d0000000000000123"]
+    tickets:
+      type: array
+      items:
+        type: string
+      example: ["672b3d2e1111111111111234"]
+    createdAt:
+      type: string
+      format: date-time
+      example: "2024-05-20T10:15:30.000Z"
+    updatedAt:
+      type: string
+      format: date-time
+      example: "2024-06-05T14:45:00.000Z"
