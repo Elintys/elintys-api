@@ -1,13 +1,14 @@
-// routes/eventRoutes.ts
 import { Router } from "express";
 import {
+  createEvent,
+  deleteEvent,
   getAllEvents,
   getEventById,
-  createEvent,
+  getEventsByUser,
+  getEventsByCategory,
   updateEvent,
-  deleteEvent,
 } from "../controllers/event.controller";
-
+import { verifyFirebaseToken } from "../middlewares/authMiddleware";
 const router = Router();
 
 /**
@@ -20,6 +21,12 @@ const router = Router();
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *
  *   schemas:
  *     Event:
  *       type: object
@@ -36,47 +43,37 @@ const router = Router();
  *         title:
  *           type: string
  *           description: Titre de l'événement
- *           example: "Gala des Entrepreneurs 2025"
  *         description:
  *           type: string
  *           description: Brève description de l'événement
- *           example: "Célébration annuelle des jeunes entrepreneurs"
  *         organizer:
  *           type: string
  *           description: ID de l’utilisateur organisateur
- *           example: "66ff14ed98a9a8e21300afc4"
  *         organization:
  *           type: string
  *           description: ID de l'organisation liée
- *           example: "670b1f12abcde9012f5d5678"
  *         venue:
  *           type: string
  *           description: ID du lieu de l'événement
- *           example: "670b1f12abcde9012f5d9876"
  *         category:
  *           type: string
  *           example: "Business"
  *         startDate:
  *           type: string
  *           format: date-time
- *           example: "2025-03-15T18:00:00.000Z"
  *         endDate:
  *           type: string
  *           format: date-time
- *           example: "2025-03-15T23:00:00.000Z"
  *         isPublic:
  *           type: boolean
- *           example: true
  *         tickets:
  *           type: array
  *           items:
  *             type: string
- *           example: ["671a2c1d0000000000000123"]
  *         staff:
  *           type: array
  *           items:
  *             type: string
- *           example: ["671a2c1d0000000000000987"]
  */
 
 /**
@@ -85,42 +82,25 @@ const router = Router();
  *   get:
  *     summary: Liste tous les événements
  *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Liste complète des événements
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Event'
- *
  *   post:
  *     summary: Créer un nouvel événement
  *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Event'
- *           example:
- *             title: "TechNova Expo 2025"
- *             description: "Salon de la technologie et de l’innovation"
- *             organizer: "66ff14ed98a9a8e21300afc4"
- *             startDate: "2025-05-20T09:00:00.000Z"
- *             endDate: "2025-05-20T18:00:00.000Z"
- *             category: "Tech"
- *             isPublic: true
  *     responses:
  *       201:
  *         description: Événement créé avec succès
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Event'
- *       400:
- *         description: Données manquantes ou invalides
  */
 
 /**
@@ -129,67 +109,77 @@ const router = Router();
  *   get:
  *     summary: Récupère un événement par ID
  *     tags: [Events]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de l'événement
- *     responses:
- *       200:
- *         description: Détails de l'événement
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Event'
- *       404:
- *         description: Événement non trouvé
- *
+ *     security:
+ *       - bearerAuth: []
  *   put:
  *     summary: Met à jour un événement existant
  *     tags: [Events]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de l'événement
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Event'
- *     responses:
- *       200:
- *         description: Événement mis à jour avec succès
- *       404:
- *         description: Événement introuvable
- *
+ *     security:
+ *       - bearerAuth: []
  *   delete:
  *     summary: Supprime un événement
  *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
+ */
+
+/**
+ * @swagger
+ * /api/events/user/{userId}:
+ *   get:
+ *     summary: Récupère tous les événements créés par un utilisateur
+ *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID de l'utilisateur (organisateur)
  *     responses:
  *       200:
- *         description: Événement supprimé avec succès
+ *         description: Liste des événements de l'utilisateur
+ */
+
+/**
+ * @swagger
+ * /api/events/category/{categoryId}:
+ *   get:
+ *     summary: Récupère tous les événements d'une catégorie donnée
+ *     tags: [Events]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la catégorie
+ *     responses:
+ *       200:
+ *         description: Liste des événements appartenant à la catégorie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Event'
  *       404:
- *         description: Événement non trouvé
+ *         description: Aucune donnée trouvée
  */
 
 
-// CRUD complet
-router.get("/", getAllEvents);       // GET /api/events
-router.get("/:id", getEventById);    // GET /api/events/:id
-router.post("/", createEvent);       // POST /api/events
-router.put("/:id", updateEvent);     // PUT /api/events/:id
-router.delete("/:id", deleteEvent);  // DELETE /api/events/:id
+// router.use(verifyFirebaseToken); // Toutes les routes ci-dessous nécessitent une authentification
+
+router.get("/", getAllEvents);
+router.get("/:id", getEventById);
+router.get("/user/:userId", verifyFirebaseToken, getEventsByUser);
+router.post("/", createEvent);
+router.put("/:id", updateEvent);
+router.delete("/:id", deleteEvent);
+router.get("/category/:categoryId", getEventsByCategory);
 
 export default router;

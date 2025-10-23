@@ -1,10 +1,18 @@
 import { Document, model, Schema } from "mongoose";
 
+/**
+ * Interface utilisateur MongoDB
+ * 
+ * Remarque :
+ * - Le champ `firebaseUid` permet d’associer un utilisateur MongoDB
+ *   à son compte Firebase Auth.
+ * - Le mot de passe n’est plus stocké côté MongoDB (Firebase le gère).
+ */
 export interface IUser extends Document {
+  firebaseUid: string; // UID unique venant de Firebase Auth
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
   avatarUrl?: string;
   role: "user" | "organizer" | "staff" | "admin";
   organizations: Schema.Types.ObjectId[];
@@ -15,10 +23,14 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
+    firebaseUid: {
+      type: String,
+      required: true,
+      unique: true, // chaque compte Firebase correspond à un user Mongo
+    },
     firstName: { type: String, required: true },
     lastName:  { type: String, required: true },
     email:     { type: String, required: true, unique: true },
-    password:  { type: String, required: true },
     avatarUrl: { type: String },
     role: { 
       type: String, 
