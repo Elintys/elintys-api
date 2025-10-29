@@ -1,19 +1,7 @@
-import { Schema, model, Types, Document } from "mongoose";
+import { model, Schema } from "mongoose";
+import { IEvent } from "./interfaces/IEvent";
 
-export interface IEvent extends Document {
-  title: string;
-  description?: string;
-  organizer: Types.ObjectId;
-  organization?: Types.ObjectId;
-  venue?: Types.ObjectId;
-  category?: string;
-  startDate: Date;
-  endDate: Date;
-  isPublic: boolean;
-  tickets: Types.ObjectId[];
-  staff: Types.ObjectId[];
-  externalSource?: Types.ObjectId;
-}
+
 
 const EventSchema = new Schema<IEvent>(
   {
@@ -22,7 +10,7 @@ const EventSchema = new Schema<IEvent>(
     organizer: { type: Schema.Types.ObjectId, ref: "User", required: true },
     organization: { type: Schema.Types.ObjectId, ref: "Organization" },
     venue: { type: Schema.Types.ObjectId, ref: "Venue", required: true },
-    category: { type: String },
+    category: { type: Schema.Types.ObjectId, ref: "Category" },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     isPublic: { type: Boolean, default: true },

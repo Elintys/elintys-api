@@ -8,6 +8,9 @@ import organizationRoutes from "./routes/organization.routes";
 import ticketRoutes from "./routes/ticket.routes";
 import notificationRoutes from "./routes/notification.routes";
 import invitationRoutes from "./routes/invitation.routes";
+import authRoutes from './routes/auth.routes';
+import categoryRoutes from './routes/category.Routes';
+
 
 dotenv.config();
 
@@ -18,9 +21,11 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/venues", venueRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/api/organizations", organizationRoutes);
 app.use("/api/tickets", ticketRoutes);
 app.use("/api/notifications", notificationRoutes);
