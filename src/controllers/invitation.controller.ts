@@ -1,134 +1,121 @@
+// controllers/invitation.controller.ts
 import { Request, Response } from "express";
 import Invitation from "../models/Invitation";
-import Event from "../models/Event";
-import User from "../models/User";
 
 /**
  * @desc    Créer une nouvelle invitation
  * @route   POST /api/invitations
+ * @access  Private
  */
 export const createInvitation = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { event, sender, recipientEmail } = req.body;
+    const { event, guest, fullName, email, message, isCouple } = req.body;
 
-    if (!event || !sender || !recipientEmail) {
-      res.status(400).json({ message: "Champs requis : event, sender, recipientEmail." });
+    if (!event || !fullName) {
+      res.status(400).json({ message: "L'événement et le nom de l'invité sont requis." });
       return;
     }
 
-    // Vérifie que l'événement et l'expéditeur existent
-    const foundEvent = await Event.findById(event);
-    const foundUser = await User.findById(sender);
-
-    if (!foundEvent || !foundUser) {
-      res.status(404).json({ message: "Événement ou utilisateur non trouvé." });
-      return;
-    }
-
-    // Vérifie qu'une invitation n’existe pas déjà pour ce destinataire
-    const existingInvitation = await Invitation.findOne({ event, recipientEmail });
-    if (existingInvitation) {
-      res.status(409).json({ message: "Une invitation a déjà été envoyée à cet email pour cet événement." });
-      return;
-    }
-
-    const newInvitation = new Invitation({
+    const newInvitation = await Invitation.create({
       event,
-      sender,
-      recipientEmail,
-      status: "pending",
-      sentAt: new Date(),
+      guest,
+      fullName,
+      email,
+      message,
+      isCouple,
     });
 
-    const savedInvitation = await newInvitation.save();
-
-    res.status(201).json(savedInvitation);
-  } catch (error: any) {
-    res.status(500).json({ message: "Erreur lors de la création de l'invitation", error: error.message });
+    res.status(201).json(newInvitation);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la création de l'invitation.", error });
   }
 };
 
 /**
  * @desc    Récupérer toutes les invitations
  * @route   GET /api/invitations
+ * @access  Private
  */
 export const getAllInvitations = async (req: Request, res: Response): Promise<void> => {
   try {
     const invitations = await Invitation.find()
       .populate("event", "title startDate endDate")
-      .populate("sender", "firstName lastName email");
+      .populate("guest", "firstName lastName email");
+
     res.status(200).json(invitations);
-  } catch (error: any) {
-    res.status(500).json({ message: "Erreur lors de la récupération des invitations", error: error.message });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la récupération des invitations.", error });
   }
 };
 
 /**
- * @desc    Récupérer les invitations liées à un événement
+ * @desc    Récupérer les invités d’un événement donné
  * @route   GET /api/invitations/event/:eventId
+ * @access  Private
  */
-export const getInvitationsByEvent = async (req: Request, res: Response): Promise<void> => {
+export const getGuestsByEvent = async (req: Request, res: Response): Promise<void> => {
   try {
     const { eventId } = req.params;
-    const invitations = await Invitation.find({ event: eventId })
-      .populate("sender", "firstName lastName email");
 
-    if (!invitations || invitations.length === 0) {
+    const invitations = await Invitation.find({ event: eventId })
+    // .populate("guest")
+    // .populate("event");
+    // .populate("guest", "firstName lastName email")
+    // .populate("event", "title startDate endDate");
+    
+    console.log('====================================');
+    console.log("eventId for guest: ",invitations);
+    console.log('====================================');
+    if (invitations.length === 0) {
       res.status(404).json({ message: "Aucune invitation trouvée pour cet événement." });
       return;
     }
 
     res.status(200).json(invitations);
-  } catch (error: any) {
-    res.status(500).json({ message: "Erreur lors de la récupération des invitations de l'événement", error: error.message });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la récupération des invités.", error });
   }
 };
 
 /**
- * @desc    Mettre à jour le statut d'une invitation
- * @route   PATCH /api/invitations/:id
+ * @desc    Mettre à jour le statut ou le scan d’une invitation
+ * @route   PUT /api/invitations/:id
+ * @access  Private
  */
-export const updateInvitationStatus = async (req: Request, res: Response): Promise<void> => {
+export const updateInvitation = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { status } = req.body;
+    const updated = await Invitation.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-    if (!["pending", "accepted", "declined"].includes(status)) {
-      res.status(400).json({ message: "Statut invalide. Valeurs possibles : pending, accepted, declined." });
+    if (!updated) {
+      res.status(404).json({ message: "Invitation introuvable." });
       return;
     }
 
-    const updatedInvitation = await Invitation.findByIdAndUpdate(id, { status }, { new: true })
-      .populate("event", "title")
-      .populate("sender", "firstName lastName");
-
-    if (!updatedInvitation) {
-      res.status(404).json({ message: "Invitation non trouvée." });
-      return;
-    }
-
-    res.status(200).json(updatedInvitation);
-  } catch (error: any) {
-    res.status(500).json({ message: "Erreur lors de la mise à jour de l'invitation", error: error.message });
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la mise à jour de l'invitation.", error });
   }
 };
 
 /**
  * @desc    Supprimer une invitation
  * @route   DELETE /api/invitations/:id
+ * @access  Private
  */
 export const deleteInvitation = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const deleted = await Invitation.findByIdAndDelete(req.params.id);
 
-    const deletedInvitation = await Invitation.findByIdAndDelete(id);
-    if (!deletedInvitation) {
-      res.status(404).json({ message: "Invitation non trouvée." });
+    if (!deleted) {
+      res.status(404).json({ message: "Invitation introuvable." });
       return;
     }
 
     res.status(200).json({ message: "Invitation supprimée avec succès." });
-  } catch (error: any) {
-    res.status(500).json({ message: "Erreur lors de la suppression de l'invitation", error: error.message });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la suppression de l'invitation.", error });
   }
 };

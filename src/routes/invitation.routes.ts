@@ -1,19 +1,20 @@
-import express from "express";
+import { Router } from "express";
 import {
   createInvitation,
   getAllInvitations,
-  getInvitationsByEvent,
-  updateInvitationStatus,
-  deleteInvitation
+  getGuestsByEvent,
+  updateInvitation,
+  deleteInvitation,
 } from "../controllers/invitation.controller";
+import { verifyFirebaseToken } from "../middlewares/authMiddleware";
 
-const router = express.Router();
+const router = Router();
 
 /**
  * @swagger
  * tags:
  *   name: Invitations
- *   description: Gestion des invitations à des événements
+ *   description: Gestion des invitations et des invités liés aux événements
  */
 
 /**
@@ -24,47 +25,61 @@ const router = express.Router();
  *       type: object
  *       required:
  *         - event
- *         - sender
- *         - recipientEmail
+ *         - fullName
  *       properties:
  *         _id:
  *           type: string
+ *           example: "671a3c1f0000000000000789"
  *         event:
  *           type: string
- *           example: "670b1f12abcde9012f5d3333"
- *         sender:
+ *           example: "671a3c1f0000000000000210"
+ *         guest:
  *           type: string
- *           example: "670b1f12abcde9012f5d2222"
- *         recipientEmail:
+ *           example: "671a3c1f0000000000000456"
+ *         fullName:
  *           type: string
- *           example: "invitee@example.com"
+ *           example: "Jean Dupont"
+ *         email:
+ *           type: string
+ *           example: "jean.dupont@example.com"
+ *         message:
+ *           type: string
+ *           example: "Vous êtes cordialement invité à notre gala annuel."
+ *         isCouple:
+ *           type: boolean
+ *           example: true
  *         status:
  *           type: string
- *           enum: [pending, accepted, declined]
- *           example: "pending"
+ *           enum: [pending, confirmed, cancelled]
+ *           example: "confirmed"
+ *         scanStatus:
+ *           type: string
+ *           enum: [not_scanned, present, absent]
+ *           example: "present"
  *         sentAt:
  *           type: string
  *           format: date-time
+ *           example: "2025-11-01T18:30:00.000Z"
  */
+
+// router.use(verifyFirebaseToken);
 
 /**
  * @swagger
  * /api/invitations:
  *   get:
- *     summary: Récupère toutes les invitations
+ *     summary: Liste toutes les invitations
  *     tags: [Invitations]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Détails de l'événement
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Invitation'
- *       404:
- *         description: Événement non trouvé
+ *         description: Liste complète des invitations
  *   post:
- *     summary: Crée une invitation
+ *     summary: Créer une nouvelle invitation
  *     tags: [Invitations]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -74,77 +89,46 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Invitation créée avec succès
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Invitation'
- *       400:
- *         description: Requête invalide
- *
+ */
+router.get("/", getAllInvitations);
+router.post("/", createInvitation);
+
+/**
+ * @swagger
  * /api/invitations/event/{eventId}:
  *   get:
- *     summary: Récupère les invitations liées à un événement
+ *     summary: Récupère toutes les invitations pour un événement donné
  *     tags: [Invitations]
- *     parameters:
- *      - in: path
- *        name: eventId
- *        required: true
- *        description: ID de l'événement
- *        schema:
- *          type: string
- *     responses:
- *       200:
- *         description: Détails de l'événement
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Invitation'
- *       404:
- *         description: Invitation non trouvé
- *
- * /api/invitations/{id}:
- *   patch:
- *     summary: Met à jour le statut d’une invitation (acceptée, refusée, etc.)
- *     tags: [Invitations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: eventId
  *         required: true
- *         description: ID de l'invitation
  *         schema:
  *           type: string
+ *         description: ID de l'événement
  *     responses:
  *       200:
- *         description: Invitation mise à jour avec succès
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Invitation'
- *       404:
- *         description: Invitation non trouvée
- *
+ *         description: Liste des invités associés à l'événement
+ */
+router.get("/event/:eventId", getGuestsByEvent);
+
+/**
+ * @swagger
+ * /api/invitations/{id}:
+ *   put:
+ *     summary: Met à jour une invitation
+ *     tags: [Invitations]
+ *     security:
+ *       - bearerAuth: []
  *   delete:
  *     summary: Supprime une invitation
  *     tags: [Invitations]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID de l'invitation
- *         schema:
- *           type: string
- *     responses:
- *       204:
- *         description: Invitation supprimée avec succès
- *       404:
- *         description: Invitation non trouvée
+ *     security:
+ *       - bearerAuth: []
  */
-
-
-router.post("/", createInvitation);
-router.get("/", getAllInvitations);
-router.get("/event/:eventId", getInvitationsByEvent);
-router.patch("/:id", updateInvitationStatus);
+router.put("/:id", updateInvitation);
 router.delete("/:id", deleteInvitation);
 
 export default router;
